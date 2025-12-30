@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 process.env.DB_ADAPTER = 'sqlite';
-process.env.SQLITE_FILE = path.join(__dirname, '..', 'data', 'test.db');
+process.env.SQLITE_FILE = path.join(__dirname, '..', '..', 'data', 'test.db');
 process.env.JWT_SECRET = 'test-secret';
 
 let server;
 
 beforeAll(async () => {
-  const p = path.join(__dirname, '..', 'data');
+  const p = path.join(__dirname, '..', '..', 'data');
   if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
   try {
     if (fs.existsSync(process.env.SQLITE_FILE)) fs.unlinkSync(process.env.SQLITE_FILE);

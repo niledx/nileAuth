@@ -10,6 +10,33 @@ services:
       - '5432:5432'
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nile"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  auth-api:
+    build:
+      context: .
+      dockerfile: go/Dockerfile
+    ports:
+      - '8080:8080'
+    environment:
+      PORT: 8080
+      DB_ADAPTER: postgres
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: nile
+      POSTGRES_PASSWORD: nilepass
+      POSTGRES_DB: nileauth
+      POSTGRES_SSLMODE: disable
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./go/migrations:/app/migrations:ro
 
 volumes:
   db_data:

@@ -4,20 +4,25 @@ Lightweight Express auth API with modular database adapters to make migrations a
 
 Quick start
 
-1. Copy `.env.example` to `.env` and edit if needed.
-2. Install dependencies:
+1. Navigate to the node directory:
+```bash
+cd node
+```
+
+2. Copy `.env.example` to `.env` and edit if needed.
+3. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. Run migration (creates SQLite DB if using sqlite):
+4. Run migration (creates SQLite DB if using sqlite):
 
 ```bash
 npm run migrate
 ```
 
-4. Start server:
+5. Start server:
 
 ```bash
 npm start
@@ -25,7 +30,7 @@ npm start
 
 Running tests
 
-Run the integration tests (they use a temporary SQLite file under `data/test.db`):
+Run the integration tests (they use a temporary SQLite file under `../data/test.db`):
 
 ```bash
 npm test
@@ -52,10 +57,14 @@ Notes
 Production recommendations
 
 - Use a managed relational DB (Postgres) and implement adapter similar to `src/db/adapters/sqlite.js`.
-- Postgres: a working adapter is provided at `src/db/adapters/postgres.js`. To use locally with Docker:
+- Postgres: a working adapter is provided at `src/db/adapters/postgres.js`. To use locally with Docker (from repo root):
 
 ```bash
+# From repo root
 docker compose up -d
+
+# From node directory
+cd node
 export DB_ADAPTER=postgres
 export POSTGRES_USER=nile
 export POSTGRES_PASSWORD=nilepass
