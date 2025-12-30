@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run migrations
+        run: npm run migrate
+        env:
+          DB_ADAPTER: sqlite
+          SQLITE_FILE: ./data/ci.db
+
+      - name: Quick server smoke test
+        run: |
+          node -e "require('./src/server'); setTimeout(()=>process.exit(0),1000)"
+        env:
+          PORT: 3001
+          DB_ADAPTER: sqlite
+          SQLITE_FILE: ./data/ci.db
+          JWT_SECRET: test-secret
+
+      - name: Run tests
+        run: npm test
+        env:
+          DB_ADAPTER: sqlite
+          SQLITE_FILE: ./data/ci.db
+          JWT_SECRET: test-secret
